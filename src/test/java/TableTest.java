@@ -1,5 +1,5 @@
-import balbucio.sqliteapi.SQLiteInstance;
-import balbucio.sqliteapi.SqliteConfig;
+import balbucio.sqlapi.sqlite.SQLiteInstance;
+import balbucio.sqlapi.sqlite.SqliteConfig;
 
 import java.io.File;
 

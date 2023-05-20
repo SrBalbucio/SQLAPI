@@ -1,4 +1,4 @@
-package balbucio.sqliteapi;
+package balbucio.sqlapi.sqlite;
 
 import java.io.File;
 
