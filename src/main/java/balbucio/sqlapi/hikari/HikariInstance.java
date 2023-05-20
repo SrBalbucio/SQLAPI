@@ -16,12 +16,20 @@ public class HikariInstance extends ISQL {
     private HikariDataSource source;
     private Connection connection;
 
+    /**
+     * Crie usando o HikariConfig e o SQLConfig
+     * @param config
+     * @param sqlconfig
+     */
     public HikariInstance(HikariConfig config, SQLConfig sqlconfig){
         this.sqlConfig = sqlconfig;
         this.config = config;
         this.source = new HikariDataSource(config);
     }
 
+    /**
+     * Cria uma conexão Hikari
+     */
     @Override
     public void connect() {
         try{
@@ -31,11 +39,20 @@ public class HikariInstance extends ISQL {
         }
     }
 
+    /**
+     * Retorna a conexão atual
+     * @return
+     */
     @Override
     public Connection getConnection() {
         return connection;
     }
 
+    /**
+     * Crie um statement configurado
+     * @return retorna o Statement
+     * @throws SQLException em caso de erro
+     */
     @Override
     public Statement getStatement() throws SQLException {
         Statement set = connection.createStatement();

@@ -48,6 +48,10 @@ public class SQLiteInstance extends ISQL {
         return set;
     }
 
+    /**
+     * Retorna a conexão atual
+     * @return
+     */
     @Override
     public Connection getConnection() {
         return connection;
