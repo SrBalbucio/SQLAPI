@@ -36,6 +36,7 @@ public abstract class ISQL {
 
             Statement statement = getStatement();
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS "+tableName+" ("+columns+");");
+            statement.close();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -95,6 +96,7 @@ public abstract class ISQL {
 
             Statement statement = getStatement();
             statement.executeUpdate("TRUNCATE TABLE "+tableName+";");
+            statement.close();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -114,6 +116,7 @@ public abstract class ISQL {
 
             Statement statement = getStatement();
             statement.executeUpdate("INSERT INTO "+tableName+" ("+columns+") VALUES ("+values+");");
+            statement.close();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -133,6 +136,7 @@ public abstract class ISQL {
 
             Statement statement = getStatement();
             statement.executeUpdate("INSERT IGNORE INTO "+tableName+" ("+columns+") VALUES ("+values+");");
+            statement.close();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -155,6 +159,7 @@ public abstract class ISQL {
 
             Statement statement = getStatement();
             statement.executeUpdate("UPDATE "+tableName+" SET "+selected+" = "+newValue+" WHERE "+columnSelected+" "+logic+" "+data+";");
+            statement.close();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -181,6 +186,7 @@ public abstract class ISQL {
             while (set.next()){
                 obj = set.getObject(selected);
             }
+            statement.close();
         } catch (Exception e){
             e.printStackTrace();
 
@@ -209,6 +215,7 @@ public abstract class ISQL {
             while(set.next()){
                 objects.add(set.getObject(selected));
             }
+            statement.close();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -237,6 +244,7 @@ public abstract class ISQL {
                 }
                 objs.add(values);
             }
+            statement.close();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -255,6 +263,7 @@ public abstract class ISQL {
 
             Statement statement = getStatement();
             set = statement.executeQuery(query);
+            statement.close();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -273,6 +282,7 @@ public abstract class ISQL {
 
             Statement statement = getStatement();
             statement.executeUpdate(query);
+            statement.close();
         } catch (Exception e){
             e.printStackTrace();
         }
