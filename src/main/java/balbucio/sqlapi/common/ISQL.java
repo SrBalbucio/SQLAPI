@@ -3,12 +3,14 @@ package balbucio.sqlapi.common;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public abstract class ISQL {
 
     public abstract void connect();
     public abstract Statement getStatement() throws SQLException;
     public abstract Connection getConnection();
+    public abstract Map<String, String> getColumns(String tableName);
 
     /**
      * Checa se a conexão atual ainda existe
@@ -184,12 +186,11 @@ public abstract class ISQL {
             Statement statement = getStatement();
             ResultSet set = statement.executeQuery("SELECT "+selected+" FROM "+tableName+" WHERE "+columnSelected+" "+logic+" "+data+";");
             while (set.next()){
-                obj = set.getObject(selected);
+                obj = set.getObject(selected.replace("`", ""));
             }
             statement.close();
         } catch (Exception e){
             e.printStackTrace();
-
         }
         return obj;
     }
@@ -213,7 +214,7 @@ public abstract class ISQL {
             Statement statement = getStatement();
             ResultSet set = statement.executeQuery("SELECT "+selected+" FROM "+tableName+" WHERE "+columnSelected+" "+logic+" "+data+";");
             while(set.next()){
-                objects.add(set.getObject(selected));
+                objects.add(set.getObject(selected.replace("`", "")));
             }
             statement.close();
         }catch (Exception e){

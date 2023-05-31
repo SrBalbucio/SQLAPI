@@ -38,6 +38,15 @@ public class SqliteConfig extends SQLConfig {
         }
     }
 
+    public void recreateFile(){
+        try{
+            this.databaseFile.delete();
+            this.databaseFile.createNewFile();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public String getId() {
         return id;
     }

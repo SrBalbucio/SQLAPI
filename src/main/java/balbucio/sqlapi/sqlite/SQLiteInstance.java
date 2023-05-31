@@ -4,7 +4,9 @@ import balbucio.sqlapi.common.ISQL;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SQLiteInstance extends ISQL {
 
@@ -55,5 +57,25 @@ public class SQLiteInstance extends ISQL {
     @Override
     public Connection getConnection() {
         return connection;
+    }
+
+    @Override
+    public Map<String, String> getColumns(String tableName) {
+        Map<String, String> columns = new HashMap<>();
+        try{
+            if(!isConnected()){
+                connect();
+            }
+
+            Statement statement = getStatement();
+            ResultSet set = statement.executeQuery("PRAGMA table_info(" + tableName + ")");
+
+            while (set.next()){
+                columns.put(set.getString("name"), set.getString("type"));
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return columns;
     }
 }

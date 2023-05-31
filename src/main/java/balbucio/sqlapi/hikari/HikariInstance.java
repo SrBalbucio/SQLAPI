@@ -8,6 +8,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Map;
 
 public class HikariInstance extends ISQL {
 
@@ -46,6 +47,11 @@ public class HikariInstance extends ISQL {
     @Override
     public Connection getConnection() {
         return connection;
+    }
+
+    @Override
+    public Map<String, String> getColumns(String tableName) {
+        return null;
     }
 
     /**
