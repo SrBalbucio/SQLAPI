@@ -105,6 +105,26 @@ public abstract class ISQL {
     }
 
     /**
+     * Deleta uma linha da coluna
+     * @param column Coluna que você deseja verificar o item
+     * @param value Item que você deseja remover
+     * @param tableName Tabela que deve ser efetuado
+     */
+    public void delete(String column, Object value, String tableName){
+        try{
+            if(!isConnected()){
+                connect();
+            }
+
+            Statement statement = getStatement();
+            statement.executeUpdate("DELETE FROM "+tableName+" WHERE "+column+"="+value);
+            statement.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Insere dados a uma tabela
      * @param columns Colunas que você deseja preencher (Ex.: jogador, id)
      * @param values Valores que você deseja adicionar (Ex.: 'Neymar', '1')

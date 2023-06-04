@@ -27,14 +27,14 @@ public class SQLITETEST {
         instance.createTable("MEDIO", "aluno VARCHAR(255), id BIGINT");
         instance.createTable("FACULDADE", "aluno VARCHAR(255), id BIGINT");
         instance.createTable("grupos", "`group-name` VARCHAR(255), id BIGINT");
-        instance.insert("`group-name`, id", "'King', '1'", "grupos");
-        instance.insert("`group-name`, id", "'Hunter', '2'", "grupos");
-        instance.insert("`group-name`, id", "'Prince', '3'", "grupos");
     }
 
     @DisplayName("Criando grupos com traço")
     @Test
     public void getGroup(){
+        instance.insert("`group-name`, id", "'King', '1'", "grupos");
+        instance.insert("`group-name`, id", "'Hunter', '2'", "grupos");
+        instance.insert("`group-name`, id", "'Prince', '3'", "grupos");
         assertEquals("King",instance.get("id", "=", "1", "`group-name`", "grupos"), "Retornar King");
         assertEquals("Hunter",instance.get("id", "=", "2", "`group-name`", "grupos"), "Retornar Hunter");
         assertEquals("Prince",instance.get("id", "=", "3", "`group-name`", "grupos"), "Retornar Prince");
@@ -64,5 +64,12 @@ public class SQLITETEST {
     @Test
     public void tableExists(){
         assertTrue(instance.tableExists("grupos"));
+    }
+
+    @DisplayName("Deletar item")
+    @Test
+    public void delete(){
+        instance.delete("id", 1, "grupos");
+        assertNull(instance.get("id", "=", "1", "`group-name`", "grupos"));
     }
 }
