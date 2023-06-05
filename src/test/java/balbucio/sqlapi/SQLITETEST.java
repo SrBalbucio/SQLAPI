@@ -72,4 +72,16 @@ public class SQLITETEST {
         instance.delete("id", 1, "grupos");
         assertNull(instance.get("id", "=", "1", "`group-name`", "grupos"));
     }
+
+    @DisplayName("Checar se existe")
+    @Test
+    public void existsNot(){
+        assertFalse(instance.exists("id", "=", "4", "grupos"));
+    }
+    @DisplayName("Checar se existe")
+    @Test
+    public void exists(){
+        instance.insert("`group-name`, id", "'Hunter', '2'", "grupos");
+        assertTrue(instance.exists("id", "=", "2", "grupos"));
+    }
 }

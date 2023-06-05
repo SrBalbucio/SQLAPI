@@ -124,6 +124,25 @@ public abstract class ISQL {
         }
     }
 
+    public boolean exists(String column, String codition, Object item, String tableName){
+        boolean exists = false;
+        try{
+            if(!isConnected()){
+                connect();
+            }
+
+            Statement statement = getStatement();
+            ResultSet set = statement.executeQuery("SELECT "+column+" FROM "+tableName+" WHERE EXISTS (SELECT "+column+" FROM "+tableName+" WHERE "+column+" "+codition+" "+item+");");
+            while(set.next()){
+                exists = set.getBoolean(column);
+            }
+            statement.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return exists;
+    }
+
     /**
      * Insere dados a uma tabela
      * @param columns Colunas que você deseja preencher (Ex.: jogador, id)
