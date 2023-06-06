@@ -126,7 +126,15 @@ public abstract class ISQL {
         }
     }
 
-    public boolean exists(String column, String codition, Object item, String tableName){
+    /**
+     * Verifica se uma ROW existe
+     * @param column Coluna que você usará para comparar (Ex.: jogador)
+     * @param condition (Ex.: = )
+     * @param item Dado para ser comparado (Ex.: "neymar")
+     * @param tableName Tabela a ser efetuada a Query
+     * @return se existe
+     */
+    public boolean exists(String column, String condition, Object item, String tableName){
         boolean exists = false;
         try{
             if(!isConnected()){
@@ -134,10 +142,8 @@ public abstract class ISQL {
             }
 
             Statement statement = getStatement();
-            ResultSet set = statement.executeQuery("SELECT "+column+" FROM "+tableName+" WHERE EXISTS (SELECT "+column+" FROM "+tableName+" WHERE "+column+" "+codition+" "+item+");");
-            while(set.next()){
-                exists = set.getBoolean(column);
-            }
+            ResultSet set = statement.executeQuery("SELECT EXISTS(SELECT * from "+tableName+" WHERE "+column+" "+condition+" "+item+");");
+            exists = set.getBoolean(1);
             statement.close();
         } catch (Exception e){
             e.printStackTrace();

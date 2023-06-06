@@ -74,16 +74,23 @@ public class SQLITETEST {
         assertNull(instance.get("id", "=", "1", "`group-name`", "grupos"));
     }
 
-    @DisplayName("Checar se existe")
+    @DisplayName("Checar se não existe")
     @Test
     public void existsNot(){
-        assertFalse(instance.exists("id", "=", "4", "grupos"));
+        assertFalse(instance.exists("id", "=", "4", "`group-name`", "grupos"));
     }
     @DisplayName("Checar se existe")
     @Test
     public void exists(){
         instance.insert("`group-name`, id", "'Hunter', '2'", "grupos");
-        assertTrue(instance.exists("id", "=", "2", "grupos"));
+        assertTrue(instance.exists("id", "=", "2", "`group-name`", "grupos"));
+    }
+
+    @DisplayName("Outro check")
+    @Test
+    public void otherExists(){
+        instance.insert("aluno, id", "'MARCIOTRANSADO', '3'", "TI");
+        assertTrue(instance.exists("id", "=", "3", "aluno", "TI"));
     }
 
     @DisplayName("Set com multiplas Conditions")
