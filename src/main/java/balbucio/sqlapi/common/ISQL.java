@@ -1,5 +1,7 @@
 package balbucio.sqlapi.common;
 
+import balbucio.sqlapi.model.ConditionValue;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -199,8 +201,21 @@ public abstract class ISQL {
             }
 
             Statement statement = getStatement();
-            statement.executeUpdate("UPDATE "+tableName+" SET "+selected+" = "+newValue+" WHERE "+columnSelected+" "+logic+" "+data+";");
+            statement.executeUpdate("UPDATE "+tableName+" SET "+selected+" = '"+newValue+"' WHERE "+columnSelected+" "+logic+" '"+data+"';");
             statement.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void set(ConditionValue[] conditionValues, String selected, Object value, String tableName){
+        try{
+          if(!isConnected()){
+              connect();
+          }
+          Statement statement = getStatement();
+          statement.executeUpdate("UPDATE "+tableName+" SET "+selected+" = '"+value+"' WHERE "+getConditionQuery(conditionValues)+";");
+          statement.close();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -234,6 +249,25 @@ public abstract class ISQL {
         return obj;
     }
 
+    public Object get(ConditionValue[] conditionValues, String selected, String tableName){
+        Object obj = null;
+        try{
+            if(!isConnected()){
+                connect();
+            }
+
+            Statement statement = getStatement();
+            ResultSet set = statement.executeQuery("SELECT "+selected+" FROM "+tableName+" WHERE "+getConditionQuery(conditionValues)+";");
+            while (set.next()){
+                obj = set.getObject(selected.replace("`", ""));
+            }
+            statement.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return obj;
+    }
+
     /**
      * Retorna todos os dados que encaixem na comparação
      * @param columnSelected Coluna que você usará para comparar (Ex.: jogador)
@@ -252,6 +286,25 @@ public abstract class ISQL {
 
             Statement statement = getStatement();
             ResultSet set = statement.executeQuery("SELECT "+selected+" FROM "+tableName+" WHERE "+columnSelected+" "+logic+" "+data+";");
+            while(set.next()){
+                objects.add(set.getObject(selected.replace("`", "")));
+            }
+            statement.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return objects;
+    }
+
+    public List<Object> getAll(ConditionValue[] conditionValues, String selected, String tableName){
+        List<Object> objects = new ArrayList<>();
+        try{
+            if(!isConnected()){
+                connect();
+            }
+
+            Statement statement = getStatement();
+            ResultSet set = statement.executeQuery("SELECT "+selected+" FROM "+tableName+" WHERE "+getConditionQuery(conditionValues)+";");
             while(set.next()){
                 objects.add(set.getObject(selected.replace("`", "")));
             }
@@ -326,5 +379,17 @@ public abstract class ISQL {
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private String getConditionQuery(ConditionValue[] values){
+        String con = null;
+        for(ConditionValue v : conditionValues) {
+            if (con == null) {
+                con = v.getColumn() + " " + v.getConditional().getValue() + " '" + v.getValue()+"'";
+            } else{
+                con += v.getOperator() == ConditionValue.Operator.NULL ? "" : " "+v.getOperator().toString()+" "+v.getColumn() + " " + v.getConditional().getValue() + " '" + v.getValue()+"'";
+            }
+        }
+        return con;
     }
 }

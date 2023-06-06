@@ -1,5 +1,6 @@
 package balbucio.sqlapi;
 
+import balbucio.sqlapi.model.ConditionValue;
 import balbucio.sqlapi.sqlite.SQLiteInstance;
 import balbucio.sqlapi.sqlite.SqliteConfig;
 import org.junit.jupiter.api.*;
@@ -83,5 +84,17 @@ public class SQLITETEST {
     public void exists(){
         instance.insert("`group-name`, id", "'Hunter', '2'", "grupos");
         assertTrue(instance.exists("id", "=", "2", "grupos"));
+    }
+
+    @DisplayName("Set com multiplas Conditions")
+    @Test
+    public void setCondition(){
+        instance.createTable("testeSet", "id BIGINT, name VARCHAR(255), type VARCHAR(255)");
+        instance.insert("id, name, type", "'1', 'a', 's'", "testeSet");
+        instance.set(new ConditionValue[] {
+                new ConditionValue("id", ConditionValue.Conditional.EQUALS, 1, ConditionValue.Operator.NULL),
+                new ConditionValue("name", ConditionValue.Conditional.EQUALS, "a", ConditionValue.Operator.AND)
+        }, "type", "abc", "testeSet");
+        assertEquals("abc", instance.get("id", "=", "1", "type", "testeSet"));
     }
 }
