@@ -383,7 +383,7 @@ public abstract class ISQL {
 
     private String getConditionQuery(ConditionValue[] values){
         String con = null;
-        for(ConditionValue v : conditionValues) {
+        for(ConditionValue v : values) {
             if (con == null) {
                 con = v.getColumn() + " " + v.getConditional().getValue() + " '" + v.getValue()+"'";
             } else{
