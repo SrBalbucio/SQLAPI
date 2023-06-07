@@ -55,13 +55,13 @@ public class SQLITETEST {
         assertTrue(!instance.getTableNames().isEmpty(), "Verificando se as tabelas retornaram");
     }
 
-    @DisplayName("Recuperando as informações de coluna")
+    @DisplayName("Recuperando as informações da coluna")
     @Test
     public void getColumns(){
         assertTrue(!instance.getColumns("grupos").isEmpty());
     }
 
-    @DisplayName("Checar de tabela existe")
+    @DisplayName("Checar se tabela existe")
     @Test
     public void tableExists(){
         assertTrue(instance.tableExists("grupos"));
@@ -77,20 +77,20 @@ public class SQLITETEST {
     @DisplayName("Checar se não existe")
     @Test
     public void existsNot(){
-        assertFalse(instance.exists("id", "=", "4", "`group-name`", "grupos"));
+        assertFalse(instance.exists("id", "=", "4", "grupos"));
     }
     @DisplayName("Checar se existe")
     @Test
     public void exists(){
         instance.insert("`group-name`, id", "'Hunter', '2'", "grupos");
-        assertTrue(instance.exists("id", "=", "2", "`group-name`", "grupos"));
+        assertTrue(instance.exists("id", "=", "2", "grupos"));
     }
 
     @DisplayName("Outro check")
     @Test
     public void otherExists(){
         instance.insert("aluno, id", "'MARCIOTRANSADO', '3'", "TI");
-        assertTrue(instance.exists("id", "=", "3", "aluno", "TI"));
+        assertTrue(instance.exists("id", "=", "3", "TI"));
     }
 
     @DisplayName("Set com multiplas Conditions")
