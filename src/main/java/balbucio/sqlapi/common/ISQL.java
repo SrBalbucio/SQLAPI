@@ -151,6 +151,23 @@ public abstract class ISQL {
         return exists;
     }
 
+    public boolean exists(ConditionValue[] values, String tableName){
+        boolean exists = false;
+        try{
+            if(!isConnected()){
+                connect();
+            }
+
+            Statement statement = getStatement();
+            ResultSet set = statement.executeQuery("SELECT EXISTS(SELECT * from "+tableName+" WHERE "+getConditionQuery(values)+");");
+            exists = set.getBoolean(1);
+            statement.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return exists;
+    }
+
     /**
      * Insere dados a uma tabela
      * @param columns Colunas que você deseja preencher (Ex.: jogador, id)
