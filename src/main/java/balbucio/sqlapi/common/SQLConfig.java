@@ -3,7 +3,7 @@ package balbucio.sqlapi.common;
 public class SQLConfig {
 
     private int queryTimeout = 30;
-    private int maxRows = 20;
+    private int maxRows = 100;
 
     public int getMaxRows() {
         return maxRows;

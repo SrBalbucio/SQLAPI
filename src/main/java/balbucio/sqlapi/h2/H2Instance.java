@@ -19,7 +19,7 @@ public class H2Instance extends ISQL {
     @Override
     public void connect() {
         try{
-            connection = DriverManager.getConnection("jdbc:h2:"+config.getDatabaseFile().getAbsolutePath());
+            connection = DriverManager.getConnection("jdbc:h2:"+config.getDatabaseFile().getAbsolutePath(), config.getUser(), config.getPassword());
         } catch (Exception e){
             e.printStackTrace();
         }

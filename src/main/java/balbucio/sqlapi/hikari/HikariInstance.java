@@ -4,6 +4,7 @@ import balbucio.sqlapi.common.ISQL;
 import balbucio.sqlapi.common.SQLConfig;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.NoArgsConstructor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,10 +12,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
 
+@NoArgsConstructor
 public class HikariInstance extends ISQL {
 
-    private HikariConfig config;
-    private SQLConfig sqlConfig;
+    protected HikariConfig config;
+    protected SQLConfig sqlConfig;
     private HikariDataSource source;
     private Connection connection;
 
@@ -25,8 +27,20 @@ public class HikariInstance extends ISQL {
      */
     public HikariInstance(HikariConfig config, SQLConfig sqlconfig){
         this.sqlConfig = sqlconfig;
-        this.config = config;
-        this.source = new HikariDataSource(config);
+        setHikariConfig(config);
+    }
+
+    public void setHikariConfig(HikariConfig config){
+        try {
+            if (isConnected()) {
+                connection.close();
+                connection = null;
+            }
+            this.config = config;
+            this.source = new HikariDataSource(config);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
