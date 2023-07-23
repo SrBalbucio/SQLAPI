@@ -6,6 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class ISQL {
 
@@ -119,7 +120,7 @@ public abstract class ISQL {
             }
 
             Statement statement = getStatement();
-            statement.executeUpdate("DELETE FROM "+tableName+" WHERE "+column+"="+value);
+            statement.executeUpdate("DELETE FROM "+tableName+" WHERE "+column+" = "+value+";");
             statement.close();
         } catch (Exception e){
             e.printStackTrace();
@@ -160,6 +161,23 @@ public abstract class ISQL {
 
             Statement statement = getStatement();
             ResultSet set = statement.executeQuery("SELECT EXISTS(SELECT * from "+tableName+" WHERE "+getConditionQuery(values)+");");
+            exists = set.getBoolean(1);
+            statement.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return exists;
+    }
+
+    public boolean exists(ConditionValue value, String tableName){
+        boolean exists = false;
+        try{
+            if(!isConnected()){
+                connect();
+            }
+
+            Statement statement = getStatement();
+            ResultSet set = statement.executeQuery("SELECT EXISTS(SELECT * from "+tableName+" WHERE "+value.getColumn()+" "+value.getConditional().getValue()+" "+value.getValue()+";");
             exists = set.getBoolean(1);
             statement.close();
         } catch (Exception e){
@@ -244,6 +262,20 @@ public abstract class ISQL {
         }
     }
 
+    public void set(ConditionValue conditionValue, String selected, Object value, String tableName){
+        try{
+            if(!isConnected()){
+                connect();
+            }
+            Statement statement = getStatement();
+            statement.executeUpdate("UPDATE "+tableName+" SET "+selected+" = '"+value+"' WHERE "+conditionValue.getColumn()+" "+conditionValue.getConditional().getValue()+" "+conditionValue.getValue()+";");
+            statement.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
     /**
      * Retorna um dado
      * @param columnSelected Coluna que você usará para comparar (Ex.: jogador)
@@ -290,6 +322,26 @@ public abstract class ISQL {
         }
         return obj;
     }
+
+    public Object get(ConditionValue conditionValue, String selected, String tableName){
+        Object obj = null;
+        try{
+            if(!isConnected()){
+                connect();
+            }
+
+            Statement statement = getStatement();
+            ResultSet set = statement.executeQuery("SELECT "+selected+" FROM "+tableName+" WHERE "+conditionValue.getColumn()+" "+conditionValue.getConditional().getValue()+" "+conditionValue.getValue()+";");
+            while (set.next()){
+                obj = set.getObject(selected.replace("`", ""));
+            }
+            statement.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return obj;
+    }
+
 
     /**
      * Retorna todos os dados que encaixem na comparação
@@ -338,6 +390,25 @@ public abstract class ISQL {
         return objects;
     }
 
+    public List<Object[]> getAllValuesOrderedBy(String column, String tableName){
+        List<Object[]> objs = new ArrayList<>();
+        try{
+            Set<String> columns = getColumns(tableName).keySet();
+            Statement statement = getStatement();
+            ResultSet set = statement.executeQuery("SELECT * FROM "+tableName+" ORDER BY "+column+";");
+            while(set.next()){
+                Object[] objects = new Object[columns.size()];
+                for (int i = 0; i < objects.length; i++) {
+                    objects[i] = set.getObject(i);
+
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return objs;
+    }
+
     /**
      * Retorna o valor de todas as colunas solicitadas
      * @param tableName Tabela
@@ -365,6 +436,22 @@ public abstract class ISQL {
             e.printStackTrace();
         }
         return objs;
+    }
+
+    /**
+     * Cria indices no SQL
+     * @param indexName
+     * @param column
+     * @param tableName
+     */
+    public void createIndex(String indexName, String column, String tableName){
+        try{
+          Statement statement = getStatement();
+          statement.executeUpdate("CREATE INDEX "+indexName+" ON "+tableName+" ("+column+");");
+          statement.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
