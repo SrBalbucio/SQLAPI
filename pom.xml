@@ -6,7 +6,7 @@
 
     <groupId>balbucio.sqlapi</groupId>
     <artifactId>SQLAPI</artifactId>
-    <version>1.1.4</version>
+    <version>2.0</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -60,7 +60,6 @@
             <artifactId>mariadb-java-client</artifactId>
             <version>3.1.4</version>
         </dependency>
-
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
