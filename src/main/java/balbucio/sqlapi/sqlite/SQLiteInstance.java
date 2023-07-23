@@ -50,6 +50,14 @@ public class SQLiteInstance extends ISQL {
         return set;
     }
 
+    @Override
+    public PreparedStatement getPreparedStatement(String sql) throws SQLException {
+        PreparedStatement set = connection.prepareStatement(sql);
+        set.setQueryTimeout(config.getQueryTimeout());
+        set.setMaxRows(config.getMaxRows());
+        return set;
+    }
+
     /**
      * Retorna a conexão atual
      * @return

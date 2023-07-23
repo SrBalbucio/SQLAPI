@@ -76,7 +76,7 @@ public class SQLITETEST {
     @DisplayName("Recuperando as informações da coluna")
     @Test
     public void getColumns(){
-        assertTrue(!instance.getColumns("grupos").isEmpty());
+        assertFalse(instance.getColumns("grupos").isEmpty());
     }
 
     @DisplayName("Checar se tabela existe")

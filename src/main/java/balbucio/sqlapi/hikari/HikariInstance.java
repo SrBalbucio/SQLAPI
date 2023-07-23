@@ -6,6 +6,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
@@ -62,6 +63,14 @@ public class HikariInstance extends ISQL {
     @Override
     public Statement getStatement() throws SQLException {
         Statement set = connection.createStatement();
+        set.setQueryTimeout(sqlConfig.getQueryTimeout());
+        set.setMaxRows(sqlConfig.getMaxRows());
+        return set;
+    }
+
+    @Override
+    public PreparedStatement getPreparedStatement(String sql) throws SQLException {
+        PreparedStatement set = connection.prepareStatement(sql);
         set.setQueryTimeout(sqlConfig.getQueryTimeout());
         set.setMaxRows(sqlConfig.getMaxRows());
         return set;
