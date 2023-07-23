@@ -1,12 +1,10 @@
 package balbucio.sqlapi.common;
 
 import balbucio.sqlapi.model.ConditionValue;
+import balbucio.sqlapi.model.ResultValue;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public abstract class ISQL {
 
@@ -390,23 +388,39 @@ public abstract class ISQL {
         return objects;
     }
 
-    public List<Object[]> getAllValuesOrderedBy(String column, String tableName){
+    public List<Object[]> getAllValuesOrderedBy(String orderColumn, String tableName, String... columns){
         List<Object[]> objs = new ArrayList<>();
         try{
-            Set<String> columns = getColumns(tableName).keySet();
             Statement statement = getStatement();
-            ResultSet set = statement.executeQuery("SELECT * FROM "+tableName+" ORDER BY "+column+";");
+            ResultSet set = statement.executeQuery("SELECT * FROM "+tableName+" ORDER BY "+orderColumn+";");
             while(set.next()){
-                Object[] objects = new Object[columns.size()];
-                for (int i = 0; i < objects.length; i++) {
-                    objects[i] = set.getObject(i);
-
+                Object[] values = new Object[columns.length];
+                for (int i = 0; i < columns.length; i++) {
+                    values[i] = set.getObject(columns[i]);
                 }
+                objs.add(values);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
         return objs;
+    }
+
+    public ResultValue getAllValuesOrderedBy(String orderColumn, String tableName){
+        Map<String, Object> values = new HashMap<>();
+        try{
+            Set<String> columns = getColumns(tableName).keySet();
+            Statement statement = getStatement();
+            ResultSet set = statement.executeQuery("SELECT * FROM "+tableName+" ORDER BY "+orderColumn+";");
+            while(set.next()){
+                columns.forEach(c -> {
+                    try { values.put(c, set.getObject(c)); } catch (Exception ignore){}
+                });
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ResultValue(tableName, values);
     }
 
     /**
@@ -436,6 +450,28 @@ public abstract class ISQL {
             e.printStackTrace();
         }
         return objs;
+    }
+
+    public ResultValue getAllValuesFromColumns(String tableName){
+        Map<String, Object> values = new HashMap<>();
+        try{
+            if(!isConnected()){
+                connect();
+            }
+
+            Set<String> columns = getColumns(tableName).keySet();
+            Statement statement = getStatement();
+            ResultSet set = statement.executeQuery("SELECT * FROM "+tableName);
+            while(set.next()){
+                columns.forEach(c -> {
+                    try { values.put(c, set.getObject(c)); } catch (Exception ignore){}
+                });
+            }
+            statement.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ResultValue(tableName, values);
     }
 
     /**
