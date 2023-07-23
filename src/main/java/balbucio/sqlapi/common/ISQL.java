@@ -14,6 +14,16 @@ public abstract class ISQL {
     public abstract Connection getConnection();
     public abstract Map<String, String> getColumns(String tableName);
 
+    public void closeConnection(){
+        try {
+            if(isConnected()){
+                getConnection().close();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Checa se a conexão atual ainda existe
      * @return
@@ -425,21 +435,23 @@ public abstract class ISQL {
         return objs;
     }
 
-    public ResultValue getAllValuesOrderedBy(String orderColumn, String tableName){
-        Map<String, Object> values = new HashMap<>();
+    public List<ResultValue> getAllValuesOrderedBy(String orderColumn, String tableName){
+        List<ResultValue> values = new ArrayList<>();
         try{
             Set<String> columns = getColumns(tableName).keySet();
             Statement statement = getStatement();
             ResultSet set = statement.executeQuery("SELECT * FROM "+tableName+" ORDER BY "+orderColumn+";");
             while(set.next()){
+                Map<String, Object> v = new HashMap<>();
                 columns.forEach(c -> {
-                    try { values.put(c, set.getObject(c)); } catch (Exception ignore){}
+                    try { v.put(c, set.getObject(c)); } catch (Exception ignore){}
                 });
+                values.add(new ResultValue(tableName, v));
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return new ResultValue(tableName, values);
+        return values;
     }
 
     /**
@@ -471,8 +483,8 @@ public abstract class ISQL {
         return objs;
     }
 
-    public ResultValue getAllValuesFromColumns(String tableName){
-        Map<String, Object> values = new HashMap<>();
+    public List<ResultValue> getAllValuesFromColumns(String tableName){
+        List<ResultValue> values = new ArrayList<>();
         try{
             if(!isConnected()){
                 connect();
@@ -482,15 +494,17 @@ public abstract class ISQL {
             Statement statement = getStatement();
             ResultSet set = statement.executeQuery("SELECT * FROM "+tableName);
             while(set.next()){
+                Map<String, Object> v = new HashMap<>();
                 columns.forEach(c -> {
-                    try { values.put(c, set.getObject(c)); } catch (Exception ignore){}
+                    try { v.put(c, set.getObject(c)); } catch (Exception ignore){}
                 });
+                values.add(new ResultValue(tableName, v));
             }
             statement.close();
         }catch (Exception e){
             e.printStackTrace();
         }
-        return new ResultValue(tableName, values);
+        return values;
     }
 
     /**
