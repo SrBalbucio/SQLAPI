@@ -1,6 +1,7 @@
 package balbucio.sqlapi;
 
 import balbucio.sqlapi.model.ConditionValue;
+import balbucio.sqlapi.model.ResultValue;
 import balbucio.sqlapi.sqlite.SQLiteInstance;
 import balbucio.sqlapi.sqlite.SqliteConfig;
 import org.junit.jupiter.api.*;
@@ -20,10 +21,27 @@ public class SQLITETEST {
     public void init(){
         config.recreateFile();
         instance = new SQLiteInstance(config);
+        instance.createTable("Produtos", "name VARCHAR(255), price DOUBLE");
+        instance.insert("name, price", "'Smartphone Salung 5', '5200'", "Produtos");
+        instance.insert("name, price", "'Smartphone Xialong', '2200'", "Produtos");
+        instance.insert("name, price", "'Smartphone Negativo 2 MAX', '500'", "Produtos");
+        instance.insert("name, price", "'Smartphone Pera 12 PRO MAX', '90200'", "Produtos");
+        instance.insert("name, price", "'Smartphone Azus 9', '3200'", "Produtos");
+        instance.insert("name, price", "'Smartphone FakeMe 9', '2700'", "Produtos");
+        instance.insert("name, price", "'Notebook lled', '6700'", "Produtos");
+        instance.insert("name, price", "'Notebook Salung', '5700'", "Produtos");
+        instance.insert("name, price", "'Notebook PH', '7700'", "Produtos");
+        instance.insert("name, price", "'Notebook Azus', '2700'", "Produtos");
+        instance.insert("name, price", "'Notebook Racer', '4700'", "Produtos");
+        instance.insert("name, price", "'Notebook Aviall', '10700'", "Produtos");
         instance.createTable("TI", "aluno VARCHAR(255), id BIGINT");
         instance.insert("aluno, id", "'JoaoMaisLindo', '1'", "TI");
         instance.insert("aluno, id", "'TawanGostoso', '2'", "TI");
         instance.insert("aluno, id", "'MARCIOTRANSADO', '3'", "TI");
+        instance.insert("aluno, id", "'ClaudionsoFudendado', '4'", "TI");
+        instance.insert("aluno, id", "'luizaoElBrocador', '5'", "TI");
+        instance.insert("aluno, id", "'LautoBalinhaDoce', '6'", "TI");
+        instance.insert("aluno, id", "'thatizaoNarizNervoso', '7'", "TI");
         instance.createTable("INGLES", "aluno VARCHAR(255), id BIGINT");
         instance.createTable("MEDIO", "aluno VARCHAR(255), id BIGINT");
         instance.createTable("FACULDADE", "aluno VARCHAR(255), id BIGINT");
@@ -103,5 +121,19 @@ public class SQLITETEST {
                 new ConditionValue("name", ConditionValue.Conditional.EQUALS, "a", ConditionValue.Operator.AND)
         }, "type", "abc", "testeSet");
         assertEquals("abc", instance.get("id", "=", "1", "type", "testeSet"));
+    }
+
+    @DisplayName("Teste de retorno com ResultValue")
+    @Test
+    public void resultValue(){
+        ResultValue value = instance.getAllValuesFromColumns("TI");
+        assertFalse(value.getValueByColumn().isEmpty());
+    }
+
+    @DisplayName("Teste de retorno do Order")
+    @Test
+    public void resultOrder(){
+        ResultValue value = instance.getAllValuesOrderedBy("price", "Produtos");
+        assertFalse(value.getValueByColumn().isEmpty());
     }
 }
