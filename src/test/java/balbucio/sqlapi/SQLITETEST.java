@@ -7,6 +7,7 @@ import balbucio.sqlapi.sqlite.SqliteConfig;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -126,14 +127,14 @@ public class SQLITETEST {
     @DisplayName("Teste de retorno com ResultValue")
     @Test
     public void resultValue(){
-        ResultValue value = instance.getAllValuesFromColumns("TI");
-        assertFalse(value.getValueByColumn().isEmpty());
+        List<ResultValue> value = instance.getAllValuesFromColumns("TI");
+        assertFalse(value.isEmpty());
     }
 
     @DisplayName("Teste de retorno do Order")
     @Test
     public void resultOrder(){
-        ResultValue value = instance.getAllValuesOrderedBy("price", "Produtos");
-        assertFalse(value.getValueByColumn().isEmpty());
+        List<ResultValue> value = instance.getAllValuesOrderedBy("price", "Produtos");
+        assertFalse(value.isEmpty());
     }
 }
