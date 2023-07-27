@@ -13,7 +13,7 @@ import java.util.Map;
 public class HikariSQLiteInstance extends HikariInstance {
 
     public HikariSQLiteInstance(SqliteConfig sqlServerConfig){
-        super(new HikariConfig(), sqlServerConfig);
+        this(new HikariConfig(), sqlServerConfig);
     }
 
     /**
