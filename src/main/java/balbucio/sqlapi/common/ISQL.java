@@ -507,6 +507,30 @@ public abstract class ISQL {
         return values;
     }
 
+    public List<ResultValue> getAllValuesFromColumns(String tableName, ConditionValue[] condition){
+        List<ResultValue> values = new ArrayList<>();
+        try{
+            if(!isConnected()){
+                connect();
+            }
+
+            Set<String> columns = getColumns(tableName).keySet();
+            Statement statement = getStatement();
+            ResultSet set = statement.executeQuery("SELECT * FROM "+tableName+" WHERE "+getConditionQuery(condition)+";");
+            while(set.next()){
+                Map<String, Object> v = new HashMap<>();
+                columns.forEach(c -> {
+                    try { v.put(c, set.getObject(c)); } catch (Exception ignore){}
+                });
+                values.add(new ResultValue(tableName, v));
+            }
+            statement.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return values;
+    }
+
     /**
      * Cria indices no SQL
      * @param indexName
