@@ -6,10 +6,8 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.NoArgsConstructor;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.HashMap;
 import java.util.Map;
 
 @NoArgsConstructor
@@ -33,6 +31,7 @@ public class HikariInstance extends ISQL {
     public void setHikariConfig(HikariConfig config){
         try {
             if (isConnected()) {
+                source.close();
                 connection.close();
                 connection = null;
             }
@@ -66,7 +65,21 @@ public class HikariInstance extends ISQL {
 
     @Override
     public Map<String, String> getColumns(String tableName) {
-        return null;
+        Map<String, String> colu = new HashMap<>();
+        try {
+            DatabaseMetaData metaData = connection.getMetaData();
+
+            ResultSet columns = metaData.getColumns(null, null, tableName, null);
+
+            while (columns.next()) {
+                colu.put(columns.getString("COLUMN_NAME"), columns.getString("TYPE_NAME"));
+            }
+
+            columns.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return colu;
     }
 
     /**
@@ -88,5 +101,11 @@ public class HikariInstance extends ISQL {
         set.setQueryTimeout(sqlConfig.getQueryTimeout());
         set.setMaxRows(sqlConfig.getMaxRows());
         return set;
+    }
+
+    @Override
+    public void closeConnection() {
+        source.close();
+
     }
 }

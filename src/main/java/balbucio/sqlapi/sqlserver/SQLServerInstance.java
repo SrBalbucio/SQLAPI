@@ -4,6 +4,12 @@ import balbucio.sqlapi.common.SQLConfig;
 import balbucio.sqlapi.hikari.HikariInstance;
 import com.zaxxer.hikari.HikariConfig;
 
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
 public class SQLServerInstance extends HikariInstance {
 
     public SQLServerInstance(SQLServerConfig sqlServerConfig){
