@@ -21,6 +21,10 @@ public class Column {
         this.type = type;
     }
 
+    public void createIndex(String indexName){
+        sql.createIndex(indexName, name, fromTable.getTableName());
+    }
+
     public boolean exists(ConditionValue condition){
         return sql.exists(condition, fromTable.getTableName());
     }

@@ -1,7 +1,9 @@
 package balbucio.sqlapi.common;
 
 import balbucio.sqlapi.model.ConditionValue;
+import balbucio.sqlapi.model.Operator;
 import balbucio.sqlapi.model.ResultValue;
+import balbucio.sqlapi.model.sql.Table;
 
 import java.sql.*;
 import java.util.*;
@@ -99,6 +101,12 @@ public abstract class ISQL {
         } catch (Exception e){
             e.printStackTrace();
         }
+        return tables;
+    }
+
+    public List<Table> getTables(){
+        List<Table> tables = new ArrayList<>();
+        getTableNames().forEach(s -> tables.add(new Table(this, s)));
         return tables;
     }
 
@@ -590,7 +598,7 @@ public abstract class ISQL {
             if (con == null) {
                 con = v.getColumn() + " " + v.getConditional().getValue() + " '" + v.getValue()+"'";
             } else{
-                con += v.getOperator() == ConditionValue.Operator.NULL ? "" : " "+v.getOperator().toString()+" "+v.getColumn() + " " + v.getConditional().getValue() + " '" + v.getValue()+"'";
+                con += v.getOperator() == Operator.NULL ? "" : " "+v.getOperator().toString()+" "+v.getColumn() + " " + v.getConditional().getValue() + " '" + v.getValue()+"'";
             }
         }
         return con;
