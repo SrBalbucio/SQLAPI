@@ -44,7 +44,7 @@ public abstract class ISQL {
      * @param tableName Nome da Tabela (Ex.: times)
      * @param columns Colunas da Tabela (Ex.: jogador VARCHAR(255), id BIGINT)
      */
-    public void createTable(String tableName, String columns){
+    public Table createTable(String tableName, String columns){
         try {
             if (!isConnected()) {
                 connect();
@@ -53,8 +53,10 @@ public abstract class ISQL {
             Statement statement = getStatement();
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS "+tableName+" ("+columns+");");
             statement.close();
+            return new Table(this, tableName);
         } catch (Exception e){
             e.printStackTrace();
+            return null;
         }
     }
 
