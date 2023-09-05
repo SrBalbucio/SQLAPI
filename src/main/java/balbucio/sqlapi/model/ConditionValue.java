@@ -8,6 +8,14 @@ public class ConditionValue {
 
     private Operator operator;
 
+    public ConditionValue(String query){
+        String[] step = query.split(" ");
+        this.column = step[0];
+        this.conditional = Conditional.valueOf(step[1]);
+        this.value = step[2];
+        this.operator = Operator.valueOf(step[3]);
+    }
+
     public ConditionValue(String column, Conditional conditional, Object value, Operator operator) {
         this.column = column;
         this.conditional = conditional;
