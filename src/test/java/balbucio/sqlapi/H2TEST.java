@@ -3,6 +3,8 @@ package balbucio.sqlapi;
 import balbucio.sqlapi.h2.H2Config;
 import balbucio.sqlapi.h2.H2Instance;
 import balbucio.sqlapi.model.ConditionValue;
+import balbucio.sqlapi.model.Conditional;
+import balbucio.sqlapi.model.Operator;
 import balbucio.sqlapi.model.ResultValue;
 import balbucio.sqlapi.sqlite.SQLiteInstance;
 import balbucio.sqlapi.sqlite.SqliteConfig;
@@ -122,8 +124,8 @@ public class H2TEST {
         instance.createTable("testeSet", "id BIGINT, name VARCHAR(255), type VARCHAR(255)");
         instance.insert("id, name, type", "'1', 'a', 's'", "testeSet");
         instance.set(new ConditionValue[] {
-                new ConditionValue("id", ConditionValue.Conditional.EQUALS, 1, ConditionValue.Operator.NULL),
-                new ConditionValue("name", ConditionValue.Conditional.EQUALS, "a", ConditionValue.Operator.AND)
+                new ConditionValue("id", Conditional.EQUALS, 1, Operator.NULL),
+                new ConditionValue("name", Conditional.EQUALS, "a", Operator.AND)
         }, "type", "abc", "testeSet");
         assertEquals("abc", instance.get("id", "=", "1", "type", "testeSet"));
     }
