@@ -4,6 +4,7 @@ import balbucio.sqlapi.common.ISQL;
 import balbucio.sqlapi.model.ColumnValue;
 import lombok.Data;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -23,5 +24,10 @@ public class Table {
 
     public Column getColumn(String name){
         return columns.stream().filter(c -> c.getName().equals(name)).findFirst().orElse(null);
+    }
+
+    public boolean toCSV(File file){
+
+        return true;
     }
 }
