@@ -569,7 +569,6 @@ public abstract class ISQL {
 
             Statement statement = getStatement();
             set = statement.executeQuery(query);
-            statement.close();
         }catch (Exception e){
             e.printStackTrace();
         }
