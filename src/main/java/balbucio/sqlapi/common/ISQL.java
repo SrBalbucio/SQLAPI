@@ -7,6 +7,7 @@ import balbucio.sqlapi.model.sql.Table;
 
 import java.sql.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class ISQL {
 
@@ -483,6 +484,30 @@ public abstract class ISQL {
                 Object[] values = new Object[columns.length];
                 for (int i = 0; i < columns.length; i++) {
                     values[i] = set.getObject(columns[i]);
+                }
+                objs.add(values);
+            }
+            statement.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return objs;
+    }
+
+    public List<Object[]> getAllValuesFromColumnsToObj(String tableName){
+        List<Object[]> objs = new ArrayList<>();
+        try{
+            if(!isConnected()){
+                connect();
+            }
+
+            List<String> columns = new ArrayList<>(getColumns(tableName).keySet());
+            Statement statement = getStatement();
+            ResultSet set = statement.executeQuery("SELECT * FROM "+tableName);
+            while(set.next()){
+                Object[] values = new Object[columns.size()];
+                for (int i = 0; i < values.length; i++) {
+                    values[i] = set.getObject(columns.get(i));
                 }
                 objs.add(values);
             }
