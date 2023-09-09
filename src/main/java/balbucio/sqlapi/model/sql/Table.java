@@ -25,6 +25,9 @@ public class Table {
         col.forEach((d, v) -> columns.add(new Column(sql, this, d, v)));
     }
 
+    public void insert(Object... obj){
+    }
+
     public Column getColumn(String name) {
         return columns.stream().filter(c -> c.getName().equals(name)).findFirst().orElse(null);
     }
