@@ -8,6 +8,7 @@ import org.apache.commons.csv.CSVPrinter;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,13 +17,15 @@ public class Table {
 
     private ISQL sql;
     private String tableName;
-    private List<Column> columns;
+    private List<Column> columns = new ArrayList<>();
 
     public Table(ISQL sql, String tableName) {
         this.sql = sql;
         this.tableName = tableName;
         Map<String, String> col = sql.getColumns(tableName);
-        col.forEach((d, v) -> columns.add(new Column(sql, this, d, v)));
+        col.forEach((d, v) -> {
+            columns.add(new Column(sql, this, d, v));
+        });
     }
 
     public void insert(Object... obj){

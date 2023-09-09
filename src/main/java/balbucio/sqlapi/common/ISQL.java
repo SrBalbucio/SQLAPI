@@ -15,7 +15,9 @@ public abstract class ISQL {
     public abstract Statement getStatement() throws SQLException;
     public abstract PreparedStatement getPreparedStatement(String sql) throws SQLException;
     public abstract Connection getConnection();
-    public abstract Map<String, String> getColumns(String tableName);
+    public Map<String, String> getColumns(String tableName){
+        return new HashMap<>();
+    }
 
     public void closeConnection(){
         try {
