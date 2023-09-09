@@ -379,8 +379,7 @@ public abstract class ISQL {
             }
 
             PreparedStatement statement = getPreparedStatement("SELECT "+selected+" FROM "+tableName+" WHERE "+conditionValue.getColumn()+" "+conditionValue.getConditional().getValue()+" ?;");
-            statement.setObject(1, conditionValue.getColumn());
-            statement.setObject(2, conditionValue.getValue());
+            statement.setObject(1, conditionValue.getValue());
             ResultSet set = statement.executeQuery();
             while (set.next()){
                 obj = set.getObject(selected.replace("`", ""));
@@ -410,8 +409,7 @@ public abstract class ISQL {
             }
 
             PreparedStatement statement = getPreparedStatement("SELECT "+selected+" FROM "+tableName+" WHERE "+columnSelected+" "+logic+" ?;");
-            statement.setObject(1, columnSelected);
-            statement.setObject(2, data);
+            statement.setObject(1, data);
             ResultSet set = statement.executeQuery();
             while(set.next()){
                 objects.add(set.getObject(selected.replace("`", "")));
