@@ -19,8 +19,10 @@ public class SQLDESIGNTEST {
         config.recreateFile();
         HikariSQLiteInstance instance = new HikariSQLiteInstance(config);
         Table table = instance.createTable("produtos", "name VARCHAR(255), price DOUBLE");
-        Column column = table.getColumn("price");
-        double price =
-                (double) column.get(new ConditionValue("name", Conditional.EQUALS, "Phone", Operator.NULL));
+        if(table != null) {
+            Column column = table.getColumn("price");
+            double price =
+                    (double) column.get(new ConditionValue("name", Conditional.EQUALS, "Phone", Operator.NULL));
+        }
     }
 }

@@ -61,6 +61,18 @@ public abstract class ISQL {
         }
     }
 
+    public Table getTable(String tableName){
+        try{
+            if(tableExists(tableName)){
+                return new Table(this, tableName);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        return null;
+    }
+
     /**
      * Verifica se uma tabela ja existe
      * @param table nome da tabela
