@@ -153,9 +153,8 @@ public abstract class ISQL {
                 connect();
             }
 
-            PreparedStatement statement = getPreparedStatement("DELETE FROM "+tableName+" WHERE ? = ?;");
-            statement.setObject(1, column);
-            statement.setObject(2, value);
+            PreparedStatement statement = getPreparedStatement("DELETE FROM "+tableName+" WHERE "+column+" = ?;");
+            statement.setObject(1, value);
             statement.executeUpdate();
             statement.close();
         } catch (Exception e){
@@ -213,9 +212,8 @@ public abstract class ISQL {
                 connect();
             }
 
-            PreparedStatement statement = getPreparedStatement("SELECT EXISTS(SELECT * from "+tableName+" WHERE ? "+value.getConditional().getValue()+" ?;");
-            statement.setObject(1, value.getColumn());
-            statement.setObject(2, value.getValue());
+            PreparedStatement statement = getPreparedStatement("SELECT EXISTS(SELECT * from "+tableName+" WHERE "+value.getColumn()+" "+value.getConditional().getValue()+" ?;");
+            statement.setObject(1, value.getValue());
             ResultSet set = statement.executeQuery();
             exists = set.getBoolean(1);
             statement.close();
@@ -280,11 +278,9 @@ public abstract class ISQL {
                 connect();
             }
 
-            PreparedStatement statement = getPreparedStatement("UPDATE "+tableName+" SET ? = ? WHERE ? "+logic+" ?;");
-            statement.setObject(1, selected);
-            statement.setObject(2, newValue);
-            statement.setObject(3, columnSelected);
-            statement.setObject(4, data);
+            PreparedStatement statement = getPreparedStatement("UPDATE "+tableName+" SET "+selected+" = ? WHERE "+columnSelected+" "+logic+" ?;");
+            statement.setObject(1, newValue);
+            statement.setObject(2, data);
             statement.executeUpdate();
             statement.close();
         } catch (Exception e){
@@ -311,10 +307,9 @@ public abstract class ISQL {
             if(!isConnected()){
                 connect();
             }
-            PreparedStatement statement = getPreparedStatement("UPDATE "+tableName+" SET "+selected+" = ? WHERE ? "+conditionValue.getConditional().getValue()+" ?;");
+            PreparedStatement statement = getPreparedStatement("UPDATE "+tableName+" SET "+selected+" = ? WHERE "+ conditionValue.getColumn()+" "+conditionValue.getConditional().getValue()+" ?;");
             statement.setObject(1, value);
-            statement.setObject(2, conditionValue.getColumn());
-            statement.setObject(3, conditionValue.getValue());
+            statement.setObject(2, conditionValue.getValue());
             statement.executeUpdate();
             statement.close();
         } catch (Exception e){
