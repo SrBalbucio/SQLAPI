@@ -68,6 +68,21 @@ public class SQLiteInstance extends ISQL {
     }
 
     @Override
+    public void replace(String columns, String values, String tableName) {
+        try{
+            if(!isConnected()){
+                connect();
+            }
+
+            Statement statement = getStatement();
+            statement.executeUpdate("INSERT OR IGNORE INTO "+tableName+" ("+columns+") VALUES ("+values+");");
+            statement.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public Map<String, String> getColumns(String tableName) {
         Map<String, String> columns = new HashMap<>();
         try{
